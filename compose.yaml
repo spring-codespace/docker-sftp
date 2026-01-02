@@ -17,10 +17,13 @@ services:
       # This enables key-based authentication instead of password authentication
       - ./ssh/keys:/home/user/.ssh/keys:ro
 
+      - ./create_camt.sh:/etc/sftp.d/01-create-camt.sh:ro
+
     # Port mapping for network access
     ports:
       # Maps host port 2222 to container port 22 (SSH/SFTP standard port)
       # External clients connect via sftp://hostname:2222
       - "2222:22"
 
-    command: user::1007
+    command: user::1007:::CAMT,CAMT/CAMT054,CAMT/CAMT053,CAMT/CAMT052
+

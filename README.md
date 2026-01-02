@@ -1,4 +1,4 @@
-## Connect to SFTP Server
+## 1. Connect to SFTP Server
 
 Here’s a safe one-liner for connecting non-interactively without the host key prompt:
 
@@ -13,7 +13,7 @@ sftp -i ./ssh/keys/sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/n
 * `-o UserKnownHostsFile=/dev/null` → Don’t save the host key anywhere.
 * `-P 2222` → Connect to port 2222 (your mapped SFTP port).
 
-## Verify private and public keys
+## 2. Verify private and public keys
 
 Here’s a compact **one-liner** for scripts that prints only `OK` if the keys match, or `MISMATCH` if they don’t:
 
@@ -31,4 +31,32 @@ Here’s a compact **one-liner** for scripts that prints only `OK` if the keys m
 
 ---
 
-If you want, I can also make a **version that works for multiple key pairs at once**, very handy if you generate several keys. Do you want me to do that?
+## 3. Run custom script
+
+Use /etc/sftp.d/ for custom scripts and it will automatically run when the container starts. 
+
+1. Create a script on your host:
+
+```bash
+# ./scripts/create_camt.sh
+#!/bin/sh
+mkdir -p /home/user/CAMT/CAMT054 /home/user/CAMT/CAMT053 /home/user/CAMT/CAMT052
+chown -R 1007:1007 /home/user/CAMT
+```
+
+2. Mount it into the container:
+
+```yaml
+volumes:
+  - ./scripts/create_camt.sh:/etc/sftp.d/01-create-camt.sh:ro
+```
+
+3. Ensure it’s executable:
+
+```bash
+chmod +x ./scripts/create_camt.sh
+```
+
+Now the container will **always run the script at startup**, creating your CAMT directories, even if you mount `./uploads` to `/home/user`.
+
+---
