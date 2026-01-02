@@ -1,0 +1,26 @@
+services:
+  # SFTP service definition
+  sftp:
+    # Use the popular atmoz/sftp Docker image for SFTP server functionality
+    image: atmoz/sftp
+
+    # Explicitly name the container for easier management and identification
+    container_name: sftp_server
+
+    # Volume mappings for persistent storage and configuration
+    volumes:
+      # Maps the local './uploads' directory to '/home/user/upload' in the container
+      # This allows SFTP users to upload/download files that persist on the host
+      - ./uploads:/home/user/upload
+
+      # Mounts an SSH public key for authentication (read-only)
+      # This enables key-based authentication instead of password authentication
+      - ./ssh/keys:/home/user/.ssh/keys:ro
+
+    # Port mapping for network access
+    ports:
+      # Maps host port 2222 to container port 22 (SSH/SFTP standard port)
+      # External clients connect via sftp://hostname:2222
+      - "2222:22"
+
+    command: user::1007

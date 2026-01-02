@@ -1,0 +1,18 @@
+# Ignore all private SSH keys
+ssh
+
+# Ignore uploads folder (probably dynamic content)
+uploads/
+
+# Ignore any OS or editor-specific files
+*.swp
+*.swo
+*.DS_Store
+Thumbs.db
+
+# Ignore logs and temp files
+*.log
+*.tmp
+
+# Ignore generated files if any
+*.bak
